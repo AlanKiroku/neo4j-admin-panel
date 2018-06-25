@@ -2,7 +2,7 @@ FROM alpine:latest
 MAINTAINER theydonthaveit "theydonthaveit@gmail.com"
 
 ENV APP_DIR /app
-COPY . ${APP_DIR}
+COPY ./app ${APP_DIR}
 
 RUN apk update && \
     apk add python python3 python3-dev supervisor && \
@@ -12,8 +12,9 @@ RUN apk update && \
     mkdir -p ${APP_DIR}/web && \
     mkdir -p ${APP_DIR}/conf && \
     mkdir -p ${APP_DIR}/logs && \
-    echo "files = *.ini" >> /etc/supervisor/supervisord.conf
+    cat ${APP_DIR}/conf/*.ini >> /etc/supervisor/supervisord.conf
 
+COPY ./app ${APP_DIR}
 VOLUME ["${APP_DIR}"]
 EXPOSE 5000
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
