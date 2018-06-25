@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button, ButtonGroup } from 'reactstrap';
 
 class App extends Component {
   constructor(props) {
@@ -7,8 +7,10 @@ class App extends Component {
     this.state = {
       oldWords: [],
       newWords: [],
-      rows:1 
+      rows:1,
+      responseNeo: null
     }
+    this.onRadioBtnClick = this.onRadioBtnClick.bind(this)
   }
 
   handleRowChange = (evt) => {
@@ -17,31 +19,59 @@ class App extends Component {
     })
   }
 
-  submitChanges = () => {
-    console.log(this.state)
+  submitChanges = (evt) => {
+      fetch('http://0.0.0.0:5000/', {
+        method: 'POST',
+        body: JSON.stringify(this.state)
+      })
+      .then((res) => {return res.json()})
+      .then((data) => { this.setState({responseNeo: data.confirmation}) })
   }
 
   storeOld = (evt) => {
     if (evt.target.name === 'old') {
-      this.state.oldWords.push(evt.target.value)
+        const {value} = evt.target
+        this.setState({
+            oldWords: value
+        })
     }
   }
 
   storeNew = (evt) => {
     if (evt.target.name === 'new') {
-      this.state.newWords.push(evt.target.value)
+        const {value} = evt.target
+        this.setState({
+            newWords: value
+        })
     }
   }
 
-  componentDidUnmount() {
+  onRadioBtnClick( changeType ) {
+    this.setState({ changeType })
+  }
+
+  componentWillUnmount() {
     this.setState({})
   }
-  
+
   render() {
-    let rowData = [];
-    for (let i = 0; i < this.state.rows; i++) {
-      rowData.push(
-        <Row key={i}>
+    return (
+      <Container className="App">
+        <header className="App-header">
+          <h1 className="App-title">Neo Admin Panel</h1>
+        </header>
+        { this.state.responseNeo === null ? '' :
+            <Row>
+                {this.state.responseNeo}
+            </Row>
+        }
+        <Row>
+          <Col>
+            <ButtonGroup>
+              <Button onClick={() => this.onRadioBtnClick('title')} active={this.state.changeType === 'title'}>Title</Button>
+              <Button onClick={() => this.onRadioBtnClick('note')} active={this.state.changeType === 'note'}>Note</Button>
+            </ButtonGroup>
+          </Col>
           <Col>
             <label>Old</label>
             <input onChange={this.storeOld} type='text' name='old'/>
@@ -51,20 +81,6 @@ class App extends Component {
             <input onChange={this.storeNew} type='text' name='new'/>
           </Col>
         </Row>
-      )
-    }
-    return (
-      <Container className="App">
-        <header className="App-header">
-          <h1 className="App-title">Neo Admin Panel</h1>
-        </header>
-        <Row>
-          <Col>
-            <label>Number of changes required</label>
-            <input onChange={this.handleRowChange} value={this.state.rows} type="number" name='changes' />
-          </Col>
-        </Row>
-        {rowData}
         <Button onClick={this.submitChanges}>Submit</Button>
       </Container>
     );

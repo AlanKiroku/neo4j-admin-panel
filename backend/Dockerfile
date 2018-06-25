@@ -17,4 +17,4 @@ RUN apk update && \
 COPY ./app ${APP_DIR}
 VOLUME ["${APP_DIR}"]
 EXPOSE 5000
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

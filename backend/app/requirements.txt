@@ -1,2 +1,4 @@
-Quart
 gunicorn
+neo4j-driver
+Quart
+Quart-CORS
