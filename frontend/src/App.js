@@ -81,6 +81,7 @@ class App extends Component {
             <input onChange={this.storeNew} type='text' name='new'/>
           </Col>
         </Row>
+        <br />
         <Button onClick={this.submitChanges}>Submit</Button>
       </Container>
     );
