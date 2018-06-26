@@ -9,7 +9,32 @@ app = cors(app)
 
 @app.route('/', methods=['POST'])
 async def hello():
-    return json.dumps({'confirmation': 'success'})
+    if request.method == 'POST':
+        data = await request.get_data()
+        res = json.loads(data)
+
+        with db.session() as session:
+            possible_change_types = {
+                'note': 'TemplateNote',
+                'title': 'TemplateTitle'
+            }
+
+            neo_res = session.run("MATCH (a:"+possible_change_types[res['changeType']]+" {"
+                                  +res['changeType']+": '"+res['oldWord']+"'}) "
+                                  "SET a."+res['changeType']+ "= '" +res['newWord']+"' "
+                                  "RETURN "
+                                  "CASE a.note "
+                                  "WHEN '"+res['newWord']+"' "
+                                  "THEN true "
+                                  "END")
+            neo_res_unwrapped = neo_res.value()
+
+            if not neo_res_unwrapped:
+                return json.dumps({'confirmation': 'danger'})
+            elif neo_res_unwrapped:
+                return json.dumps({'confirmation': 'success'})
+            else:
+                print('fuck')
 
 if __name__ == '__main__':
     app.run(

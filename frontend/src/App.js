@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button, ButtonGroup } from 'reactstrap';
+import { Container, Row, Col, Button, ButtonGroup, Alert } from 'reactstrap';
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      oldWords: [],
-      newWords: [],
-      rows:1,
+      oldWords: '',
+      newWords: '',
       responseNeo: null
     }
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this)
@@ -20,19 +19,21 @@ class App extends Component {
   }
 
   submitChanges = (evt) => {
+      this.setState({responseNeo: null})
       fetch('http://0.0.0.0:5000/', {
         method: 'POST',
-        body: JSON.stringify(this.state)
+	  body: JSON.stringify(this.state)
       })
-      .then((res) => {return res.json()})
+      .then((res) => { return res.json() })
       .then((data) => { this.setState({responseNeo: data.confirmation}) })
+      console.log(this.state.responseNeo)
   }
 
   storeOld = (evt) => {
     if (evt.target.name === 'old') {
         const {value} = evt.target
         this.setState({
-            oldWords: value
+            oldWord: value
         })
     }
   }
@@ -41,17 +42,13 @@ class App extends Component {
     if (evt.target.name === 'new') {
         const {value} = evt.target
         this.setState({
-            newWords: value
+            newWord: value
         })
     }
   }
 
   onRadioBtnClick( changeType ) {
     this.setState({ changeType })
-  }
-
-  componentWillUnmount() {
-    this.setState({})
   }
 
   render() {
@@ -62,7 +59,14 @@ class App extends Component {
         </header>
         { this.state.responseNeo === null ? '' :
             <Row>
-                {this.state.responseNeo}
+		{ this.state.responseNeo === 'success'
+		  ? <Alert color="success">
+		      {this.state.responseNeo}
+		    </Alert>
+		  : <Alert color="danger">
+		      {this.state.responseNeo}
+		    </Alert>
+		}
             </Row>
         }
         <Row>
