@@ -26,7 +26,6 @@ class App extends Component {
       })
       .then((res) => { return res.json() })
       .then((data) => { this.setState({responseNeo: data.confirmation}) })
-      console.log(this.state.responseNeo)
   }
 
   storeOld = (evt) => {
@@ -59,14 +58,14 @@ class App extends Component {
         </header>
         { this.state.responseNeo === null ? '' :
             <Row>
-		{ this.state.responseNeo === 'success'
-		  ? <Alert color="success">
-		      {this.state.responseNeo}
-		    </Alert>
-		  : <Alert color="danger">
-		      {this.state.responseNeo}
-		    </Alert>
-		}
+            { this.state.responseNeo === 'success'
+              ? <Alert color="success">
+                  {this.state.responseNeo}
+                </Alert>
+              : <Alert color="danger">
+                  {this.state.responseNeo}
+                </Alert>
+            }
             </Row>
         }
         <Row>
