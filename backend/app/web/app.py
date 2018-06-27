@@ -9,11 +9,11 @@ from quart_cors import cors
 
 from database import db
 
-APP = Quart(__name__)
-APP = cors(APP)
+app = Quart(__name__)
+app = cors(app)
 
 
-@APP.route('/', methods=['POST'])
+@app.route('/', methods=['POST'])
 async def hello():
     """
     An async call serving POST requests from the frontend
@@ -52,5 +52,6 @@ async def hello():
                 print('fuck')
 
 if __name__ == '__main__':
-    APP.run(debug=True,
+    app.run(debug=True,
+            port=4000,
             host='0.0.0.0')

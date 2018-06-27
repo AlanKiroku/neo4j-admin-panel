@@ -19,8 +19,8 @@ class App extends Component {
   }
 
   submitChanges = (evt) => {
-      this.setState({responseNeo: null})
-      fetch('http://0.0.0.0:5000/', {
+    this.setState({responseNeo: null})
+      fetch('http://172.17.0.3:4000/', {
         method: 'POST',
 	  body: JSON.stringify(this.state)
       })
