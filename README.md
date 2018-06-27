@@ -37,14 +37,20 @@ From within backend/app/ run:
 docker build -t neo-backend .
 
 To run your newly, flashy, shinny, docker image in detach mode, from anywhere, run:
-docker run -d -p 5000:5000 neo-backend
+docker run -d -p 4000:4000 neo-backend
 
 Rikki-Tikki-Tavi, you have a mother fucken docker instance running biiitch!
+
+yet again, because meh!
+run: docker ps - retrieve docker container_id for the neo-backend
+run: docker inspect ${container_id}
+
+Open App.py under frontend/src and replace 0.0.0.0 with the IP Address you gots son! Boom!
 
 From withint frontend run:
 docker build -t neo-frontend .
 
 To run your less excited about, less interesting, third docker image in detach mode, run:
-docker run -d -p 4000:4000 neo-frontend
+docker run -d -p 5000:5000 neo-frontend
 
 You just squanched the squanch out of that squanch and that squanch be running squanchy
